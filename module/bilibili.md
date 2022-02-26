@@ -227,11 +227,15 @@ monitor_send_clear 会清空所有在模块待发送列表中的消息
 > 
 > **`dynamic_id`** 动态 id
 >
-> **`forward_dynamic`** 转发动态消息 json
->
-> **`forward_dynamic_id`** 转发动态 id
->
-> **`forward_dynamic_type`** 转发动态 类型
+> **`forward_dynamic_msg`** 转发动态消息
+
+### set_dynamic_forward_delete_message
+
+转发被删除动态消息格式，可以获取以下值
+
+> **`dynamic`** 动态消息 json
+> 
+> **`dynamic_id`** 动态 id
 
 ### set_dynamic_message
 

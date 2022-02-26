@@ -1,5 +1,19 @@
 # 更新日志
 
+#### v0.2.2
+
+添加内置模块 bilibili 转发被删除动态消息格式 `set_dynamic_forward_delete_message`
+
+优化 cqCode json 的支持，添加了转 cqCode json 格式和字典转 cqCode json 类型的方式
+
+修复内置模块 bilibili 转发被删除动态，无法正常监听的问题
+
+修复内置模块 bilibili 重复发送视频动态
+
+#### v0.2.1
+
+修复 bug 两处
+
 #### v0.2.0
 
 内部实现改为新开线程执行异步操作

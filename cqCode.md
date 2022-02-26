@@ -99,13 +99,33 @@ input()
 
 转换 cqCode 中的 json 字符串为字典
 
+cqJsonStrToDict 会自动字符替换并解析 json 字符串
+
 > **`cq_json_str`** cqCode 字典中的 json 字符串
 
 > [!attention]
 >
 > cqCode 中的 json 字符串不进行字符替换无法正常解析
+
+### DictTocqJsonStr
+
+转换字典为 cqCode 中的 json 字符串
+
+DictTocqJsonStr 会转换字典为 json 字符串，并自动字符替换
+
+> **`dict`** 字典数据
+
+> [!attention]
 >
-> cqJsonStrToDict 会自动字符替换并解析 json 字符串
+> json 字符串不进行字符替换无法正常解析
+
+### DictToCqCode
+
+转换字典为 cqCode json类型
+
+DictToCqCode 会转换字典为 json 字符串并生成 cqCode
+
+> **`dict`** 字典数据
 
 ### set_cq_code
 
