@@ -32,13 +32,13 @@ class myCqBot(cqBot):
         return super().at_bot(message, cqCode)
 
 # 使用新的 myCqBot
-myCqBot(cqapi,
+bot = myCqBot(cqapi, host="ws://127.0.0.1:5700",
     group_id_list=[
         "QQ 群号"
     ],
 )
 
-input()
+bot.start()
 ```
 
 ### meta_event_connect

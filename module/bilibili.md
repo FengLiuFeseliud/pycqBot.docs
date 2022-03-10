@@ -9,11 +9,12 @@
 并创建一条定时任务即可使用，以下实现监听碧蓝航线动态
 
 ```python
+from pycqBot.cqApi import cqHttpApi, cqLog, cqBot
 # 引入模块 Bilibili
 from pycqBot.module import Bilibili
 
 # DEBUG
-cqLog(logging.DEBUG)
+cqLog()
 
 # bilibili uid 列表
 blhx = [
@@ -56,31 +57,32 @@ def cqmb_send_new_msg(from_id):
     cqmb.monitor_send(from_id)
 
 
-myCqBot(cqapi ,
+bot = myCqBot(cqapi, "ws://127.0.0.1:5700",
     group_id_list=[
         "QQ 群号"
     ],
-    timing={
-        "cqmb":{
-            # 绑定 cqmb_send_new_msg
-            "function": cqmb_send_new_msg,
-            # 根据请求限制调整 直到挂机不会出现请求被拦截
-            "timeSleep": 35
-        }
-    }
 )
 
-input()
+bot.timing(cqmb_send_new_msg, "cqmb", {
+    # 根据请求限制调整 直到挂机不会出现请求被拦截
+    "timeSleep": 40
+})
+
+bot.start()
 ```
 
 ### 解析小程序分享信息
 
 ```python
+from pycqBot.cqApi import cqHttpApi, cqLog, cqBot
 # 引入模块 Bilibili
 from pycqBot.module import Bilibili
 
 # DEBUG
-cqLog(logging.DEBUG)
+cqLog()
+
+cqapi = cqHttpApi()
+cqmb = Bilibili(cqapi)
 
 def on_group_msg(message, cq_code_list):
     for cq_code in cq_code_list:
@@ -90,16 +92,16 @@ def on_group_msg(message, cq_code_list):
             # 如果是解析小程序并发送
             cqmb.get_link(message["group_id"], cq_code)
 
-
-cqBot(cqapi ,
-    # 使用新的 on_group_msg
-    on_group_msg=on_group_msg,
+bot = cqapi.create_bot(
     group_id_list=[
         "QQ 群号"
     ],
 )
 
-input()
+# 使用新的 on_group_msg
+bot.on_group_msg = on_group_msg
+
+bot.start()
 ```
 ## 选项
 

@@ -1,20 +1,14 @@
-# pycqBot v0.2.x
+# pycqBot v0.3.x
 
 ## 选项
 
-> **`cqapi`** cqHttpApi 对象 必须
+> **`cqapi`** cqHttpApi 对象 必须 (使用 create_bot 创建时不需要)
 > 
-> **`on_group_msg`** 群信息勾子
-> 
-> **`on_private_msg`** 私信息勾子
+> **`host`** 正向 websocket 地址
 > 
 > **`group_id_list`** 需处理群列表 为空全部处理
 > 
 > **`user_id_list`** 需处理私信列表 为空全部处理
-> 
-> **`command`** 指令列表
-> 
-> **`timing`** 定时任务
 > 
 > **`options`** options 选项
 
@@ -35,13 +29,15 @@ def on_group_msg(message, cq_code_list):
     print("新消息！%s" % message["message"])
     print("cq_code_list len: %s" % len(cq_code_list))
 
-cqBot(cqapi,
-    on_group_msg=on_group_msg,
+bot = cqapi.create_bot(
     group_id_list=[
         "QQ 群号"
     ],
 )
-input("")
+
+bot.on_group_msg = on_group_msg
+
+bot.start()
 ```
 
 **on_private_msg 的使用**
@@ -52,10 +48,6 @@ input("")
 
 ## options 选项
 
-> **`host`** go-cqhttp websocket 会话服务地址 默认127.0.0.1
-> 
-> **`port`** go-cqhttp websocket 会话服务端口 默认5700
-> 
 > **`debug`** websocket 会话 debug 默认False
 > 
 > **`admin`** bot 管理员列表 默认为空
@@ -64,9 +56,12 @@ input("")
 > 
 > **`help_text`** 帮助信息模版
 > 
-> **`auto_start`** 自动启动连接
+> **`messageSql`** 长效消息存储
+>
+> **`messageSqlPath`** 长效消息存储 数据库目录
 > 
-> **`auto_timing_start`** 自动启动定时任务
+> **`messageSqlClearTime`** 长效消息存储 清理间隔
+>
 
 **help_text 的使用**
 
@@ -77,13 +72,14 @@ input("")
 ```python
 cqapi = cqHttpApi()
 
-cqBot(cqapi,
+bot = cqapi.create_bot(
     options={
         # 注意转意!
         "help_text": "这是新的帮助信息!!!\\n本bot帮助信息!\\n{help_command_text}\\npycqbot v0.1.0"
     },
 )
-input("")
+
+bot.start()
 ```
 
 > [!attention]
@@ -96,22 +92,18 @@ input("")
 >
 > 我纯懒狗不太想动这个
 
-**auto_start 的使用**
-
-关闭后使用 `cqBot.link()` 手动启动
-
-**auto_timing_start 的使用**
-
-关闭后使用 `cqBot.timing_start()` 手动启动
-
 ## 指令
 
-在选项 `command` 中定义指令，`command` 为字典
-
-指令定义格式为键值对，键为指令，值为指令选项，目前支持以下选项
+使用 `bot.command` 定义指令
 
 > **`function`** 指令绑定函数 必须
 > 
+> **`command_name`** 指令名 多个支持数组
+> 
+> **`options`** 指令选项
+
+指令选项 `options` 为字典，目前支持以下选项
+
 > **`type`** 指令类型
 > 
 > **`admin`** 指令是否为 admin 指令
@@ -179,30 +171,32 @@ cqapi = cqHttpApi()
 def echo(commandData, cqCode_list, message, from_id):
     cqapi.send_group_msg(from_id, " ".join(commandData))
 
-cqBot(cqapi,
-    command = {
-        "echo": {
-            "function": echo,
-            # 指令帮助信息
-            "help": [
-                "#echo - 输出文本",
-                "   这个指令没有参数~",
-                "   这个指令所有用户可用~",
-            ]
-        }
-    },
-)
-input("")
+bot = cqapi.create_bot()
+
+bot.command(echo, "echo"， {
+    # 指令帮助信息
+    "help": [
+        "#echo - 输出文本",
+        "   这个指令没有参数~",
+        "   这个指令所有用户可用~",
+    ]
+})
+
+bot.start()
 ```
 
 ## 定时任务
 
-在选项 `timing` 中定义指令，`timing` 为字典
-
-定时任务定义格式为键值对，键为定时任务名称，值为定时任务选项，目前支持以下选项
+使用 `bot.timing` 定义定时任务
 
 > **`function`** 定时任务绑定函数 必须
 > 
+> **`timing_name`** 定时任务名称
+> 
+> **`options`** 定时任务选项
+
+定时任务选项 `timing` 为字典，目前支持以下选项
+
 > **`timeSleep`** 定时任务间隔 单位秒 必须
 > 
 > **`ban`** 定时任务在何处被禁用列表

@@ -43,30 +43,25 @@ def show(commandData, _, __, from_id):
         )
     )
 
-cqBot(cqapi,
+bot = cqapi.create_bot(
     group_id_list=[
         "QQ 群号"
     ],
-    command={
-        "at":{
-            "function": at_user,
-            "help": [
-                "#at - at 指定 qq 号"
-            ]
-        },
-        "show":{
-            "function": show,
-            "help": [
-                "#show - 显示我的网站背景"
-            ]
-        },
-    },
-    options={
-        "commandSign": "#",
-    },
 )
 
-input()
+bot.command(at_user, "at", {
+    "help": [
+        "#at - at 指定 qq 号"
+    ]
+})
+
+bot.command(show, "show", {
+    "help": [
+        "#show - 显示我的网站背景"
+    ]
+})
+
+bot.start()
 # 成功启动可以用 #at+空格+qq号 来 at 人
 # 也可以用 #show 显示一张图片
 ```
