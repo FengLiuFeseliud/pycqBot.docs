@@ -21,6 +21,16 @@ pycqBot 的安装十分方便
 pip install pycqBot
 ```
 
+### 支持 PyPy
+
+可以使用 PyPy3 进行性能提升
+
+```bash
+pypy3 -m pip install pycqBot
+# 改用 PyPy 运行
+pypy3 ./main.py
+```
+
 ## 快速上手
 
 ### 初始化一个 bot
