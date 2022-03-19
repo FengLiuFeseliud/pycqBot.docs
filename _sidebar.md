@@ -2,6 +2,7 @@
 
 * [介绍](/pycqbot/README)
 * [bot 设置](/pycqbot/botOptions)
+* [message](/pycqbot/message)
 * [cqHttpApi](/pycqbot/cqHttpApi)
 * [cqEvent](/pycqbot/cqEvent)
 * [cqCode](/pycqbot/cqCode)

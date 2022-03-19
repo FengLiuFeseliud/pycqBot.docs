@@ -27,7 +27,7 @@ class myCqBot(cqBot):
     # 重写 at_bot 事件
     def at_bot(self, message, cqCode):
         # 回复 at
-        message.reply("你好!")
+        cqapi.send_reply(message, "你好!")
         # 调用原 at_bot 事件的日志写入
         return super().at_bot(message, cqCode)
 

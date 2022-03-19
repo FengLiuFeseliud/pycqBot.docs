@@ -77,7 +77,6 @@ bot.start()
 from pycqBot.cqApi import cqHttpApi, cqLog, cqBot
 # 引入模块 Bilibili
 from pycqBot.module import Bilibili
-from pycqBot import message
 
 # DEBUG
 cqLog()
@@ -85,13 +84,13 @@ cqLog()
 cqapi = cqHttpApi()
 cqmb = Bilibili(cqapi)
 
-def on_group_msg(message: Message):
+def on_group_msg(message, cq_code_list):
     for cq_code in cq_code_list:
         # 如果为 cqCode json
         if cq_code["type"] == "json":
             # 直接传入 cqmb.get_link 判断是否为 bilibili 小程序
             # 如果是解析小程序并发送
-            cqmb.get_link(message.group_id, cq_code)
+            cqmb.get_link(message["group_id"], cq_code)
 
 bot = cqapi.create_bot(
     group_id_list=[

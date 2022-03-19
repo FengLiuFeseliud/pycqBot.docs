@@ -70,14 +70,12 @@ cqLog(logging.INFO)
 ### 设置第一个指令 echo 输出信息
 
 ```python
-from pycqBot import Message
-
 cqapi = cqHttpApi()
 
 # echo 函数
-def echo(commandData, message: Message):
-    # 回复消息
-    message.reply(" ".join(commandData))
+def echo(commandData, cqCodeList, message, from_id):
+    # 发送群消息
+    cqapi.send_group_msg(from_id, " ".join(commandData))
 
 bot = cqapi.create_bot(
     group_id_list=[
@@ -111,8 +109,9 @@ bot.start()
 cqapi = cqHttpApi()
 
 # echo 函数
-def echo(commandData, message: Message):
-    message.reply(" ".join(commandData))
+def echo(commandData, cqCodeList, message, from_id):
+    # send_reply 会根据 message 自动判断发送
+    cqapi.send_reply(message, " ".join(commandData))
 
 bot = cqapi.create_bot(
     group_id_list=[
@@ -147,8 +146,8 @@ bot.start()
 ```python
 cqapi = cqHttpApi()
 
-def echo(commandData, message: Message):
-    message.reply(" ".join(commandData))
+def echo(commandData, cqCodeList, message, from_id):
+    cqapi.send_reply(message, " ".join(commandData))
 
 bot = cqapi.create_bot(
     group_id_list=[
@@ -203,13 +202,13 @@ pycqBot 将自动解析消息中的 cqCode 并且向下传递
 ```python
 cqapi = cqHttpApi()
 
-def on_group_msg(message: Message):
-    # 输出需处理群每一条消息中的 cqCode 到终端
-    for cqCode in message.code:
+def on_group_msg(message, cqCodeList):
+    # 输出需处理群每一条群消息中的 cqCode 到终端
+    for cqCode in cqCodeList:
         print(cqCode)
 
-def code(commandData, message: Message):
-    message.reply("这条消息解析到了 %s 条 cqCode!" % len(message.code))
+def code(commandData, cqCodeList, message, from_id):
+    cqapi.send_reply(message, "这条消息解析到了 %s 条 cqCode!" % len(cqCodeList))
 
 bot = cqapi.create_bot(
     group_id_list=[
@@ -243,9 +242,9 @@ cqCode 名字，参数完全相同于 go-cqhttp cqCode，可以直接参考 go-c
 from pycqBot.cqCode import image
 
 cqapi = cqHttpApi()
-def show(commandData, message: Message):
+def show(commandData, cqCodeList, message, from_id):
     # image("图片名", "图片url")
-    message.reply("我的b站头像! %s" % image("head.jpg",
+    cqapi.send_group_msg(from_id, "我的b站头像! %s" % image("head.jpg",
         "https://i1.hdslb.com/bfs/face/3ad60a0f5d22e182d7a2a822710d483bc16153e2.jpg"
     ))
 
@@ -393,7 +392,6 @@ bot.command(simg, ["simg", "user", "img"], {
 ```python
 from pycqBot.cqApi import cqHttpApi, cqLog
 from pycqBot.module import pixiv
-from pycqBot import Message
 from logging import INFO
 
 # 设置日志等级
@@ -403,11 +401,11 @@ cqapi = cqHttpApi()
 cqpixiv = pixiv(cqapi, "pixivBot", "qq 号", "127.0.0.1:7890", "你的 pixiv COOKIE")
 
 # 创建 pid 指令函数
-def pid(cdata, message: Message):
+def pid(cdata, _, msg, __):
     cqpixiv.search_pid(cdata[0], msg)
 
 # 创建 simg 指令函数
-def simg(cdata, message: Message):
+def simg(cdata, _, msg, __):
     cqpixiv.search_user_image_random(cdata[0], cdata[1], msg)
 ```
 
@@ -420,14 +418,14 @@ from pycqBot.cqApi import cqBot
 
 class myCqBot(cqBot):
 
-    def on_private_msg(self, message):
-        for cq_code in message.code:
+    def on_private_msg(self, message, cq_code_list):
+        for cq_code in cq_code_list:
             if cq_code["type"] == "image":
                 cqapi.download_img(cq_code["data"]["file"])
-                message.reply("保存图片 %s..." % cq_code["data"]["file"])
+                cqapi.send_reply(message, "保存图片 %s..." % cq_code["data"]["file"])
 
     def at_bot(self, message, cqCode_list, cqCode):
-        message.reply("你好!")
+        cqapi.send_reply(message, "你好!")
         return super().at_bot(message, cqCode_list, cqCode)
 ```
 

@@ -16,16 +16,18 @@
 
 绑定一个函数，所有需处理群消息都会调用 on_group_msg
 
-这个函数会被提供一个参数
+这个函数会被提供两个参数
 
 > `message` 当前群消息
+>
+> `cq_code_list` 自动解析后的 cqCode 列表
 
 ```python
 cqapi = cqHttpApi()
 
-def on_group_msg(message: Message):
+def on_group_msg(message, cq_code_list):
     print("新消息！%s" % message["message"])
-    print("cq_code_list len: %s" % len(message.code))
+    print("cq_code_list len: %s" % len(cq_code_list))
 
 bot = cqapi.create_bot(
     group_id_list=[
@@ -116,7 +118,11 @@ bot.start()
 
 > **`commandData`** 指令参数 (内部使用空格分割)
 >
-> **`message`** 当前消息对象
+> **`cqCode_list`** 当前消息的 cqCode 字典列表
+>
+> **`message`** 当前消息
+>
+> **`from_id`** 来源 id qq/群号
 
 **type 的使用**
 
@@ -162,8 +168,8 @@ bot.start()
 ```python
 cqapi = cqHttpApi()
 
-def echo(commandData, message: Message):
-    message.reply( " ".join(commandData))
+def echo(commandData, cqCode_list, message, from_id):
+    cqapi.send_group_msg(from_id, " ".join(commandData))
 
 bot = cqapi.create_bot()
 

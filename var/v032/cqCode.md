@@ -31,13 +31,13 @@ from pycqBot.cqCode import at, image
 
 cqapi = cqHttpApi()
 
-def at_user(commandData, message: Message):
+def at_user(commandData, _, __, from_id):
     # at
-    message.reply(at(commandData[0]))
+    cqapi.send_group_msg(from_id, at(commandData[0]))
 
-def show(commandData, message: Message):
+def show(commandData, _, __, from_id):
     # image
-    message.reply(image(
+    cqapi.send_group_msg(from_id, image(
             "test.png",
             "https://img.sakuratools.top/bg.png@0x0x0x80"
         )

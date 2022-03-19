@@ -48,7 +48,7 @@ cqHttpApi 提供了一些函数，使编写 bot 更加方便
 
 元组中的数据按以下排列
 
-> (自增id, qq, 存储时间, 存储有效时间, 消息数据字符串)
+> (qq, 存储时间, 存储有效时间, 消息数据字符串)
 
 > [!attention]
 >
@@ -58,7 +58,7 @@ cqHttpApi 提供了一些函数，使编写 bot 更加方便
 
 等待指定 qq 的下一条消息 (可以理解为指定 qq 回复 bot)，在指令中使用时不会堵塞其他操作
 
-等待超时返回 None 用于进行判断
+等待超时返回空字典用于进行判断
 
 > **`user_id`** 指定等待 qq
 > 
@@ -77,35 +77,35 @@ bot = cqapi.create_bot(options={
     "messageSql": True
 })
 
-def get(_, message: Message):
+def get(_, __, msg, from_id):
     # 获取该条消息发送用户 qq 存储的消息
-    message_list = cqapi.record_message_get(message.user_id)
-    message.reply(msg, "qq %s 存储了 %s 条消息 如有消息内容如下" % (message.user_id, len(message_list)))
+    message_list = cqapi.record_message_get(msg["user_id"])
+    cqapi.send_reply(msg, "qq %s 存储了 %s 条消息 如有消息内容如下" % (msg["user_id"], len(message_list)))
 
     if message_list == []:
         return
         
     message_data = ""
-    for record_message_data in record_message_list:
-        record_message_data = eval(record_message_data[-1])
-        message_data = "%s%s\n" % (message_data, record_message_data["message"])
+    for message in message_list:
+        message = eval(message[-1])
+        message_data = "%s%s\n" % (message_data, message["message"])
 
-    message.reply(message_data)
+    cqapi.send_reply(msg, message_data)
 
-def set(_, message: Message):
-    cqapi.message.reply("等待时间！20s")
+def set(_, __, msg, from_id):
+    cqapi.send_reply(msg, "等待时间！20s")
 
     # 等待该条消息发送用户 二次输入
-    data = cqapi.reply(message.user_id, 20)
+    data = cqapi.reply(msg["user_id"], 20)
 
     # 为空说明超时了也没进行输入
-    if data is None:
-        message.reply("超过等待时间！")
+    if data == {}:
+        cqapi.send_reply(msg, "超过等待时间！")
         return
 
     # 存储二次输入的消息
     # 存储时长 60 * 60 一小时
-    message.record(60 * 60)
+    cqapi.record_message(data, 60 * 60)
 
 bot.command(get, "get")
 
@@ -126,7 +126,7 @@ download_img 会向事件循环线程添加任务，不会影响 bot 线程
 ```python
 cqapi = cqHttpApi(download_path="./test_download")
 
-def on_group_msg(message: Message):
+def on_group_msg(message, cq_code_list):
     for cq_code in cq_code_list:
         # 判断是否为图片
         if cq_code["type"] == "image":
@@ -173,7 +173,7 @@ add_task 会向事件循环线程添加任务，不会影响 bot 线程
 cqapi = cqHttpApi()
 
 # 创建 async 函数 _on_group_msg
-async def _on_group_msg(message: Message):
+async def _on_group_msg(message, cq_code_list):
     data = {
         "message_id": message["message_id"]
     }
@@ -183,9 +183,9 @@ async def _on_group_msg(message: Message):
     cqapi.send_reply(message, "%s" % data)
 
 # 创建非 async 函数 on_group_msg
-def on_group_msg(message: Message):
+def on_group_msg(message, cq_code_list):
     # 向内部事件循环线程添加任务, 调用 async 函数 _on_group_msg
-    cqapi.add_task(_on_group_msg(message))
+    cqapi.add_task(_on_group_msg(message, cq_code_list))
 
 bot = cqapi.create_bot()
 bot.on_group_msg = on_group_msg
@@ -256,11 +256,11 @@ class myCqHttpApi(cqHttpApi):
 # 使用修改好的 myCqHttpApi
 cqapi = myCqHttpApi()
 
-def on_group_msg(message: Message):
-    for cq_code in message.code:
+def on_group_msg(message, cq_code_list):
+    for cq_code in cq_code_list:
         if cq_code["type"] == "image":
             cqapi.download_img(cq_code["data"]["file"])
-            message.reply("保存图片 %s..." % cq_code["data"]["file"])
+            cqapi.send_reply(message, "保存图片 %s..." % cq_code["data"]["file"])
 
 bot = cqapi.create_bot()
 bot.on_group_msg = on_group_msg
