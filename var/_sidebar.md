@@ -5,7 +5,7 @@
 * [cqHttpApi](/pycqbot/cqHttpApi)
 * [cqEvent](/pycqbot/cqEvent)
 * [cqCode](/pycqbot/cqCode)
-* [内置模块](/pycqbot/module/)
+* [内置插件](/pycqbot/module/)
 * [更新日志 / 历史版本](/pycqbot/var/)
     * [v0.2.0](/pycqbot/var/v020/)
     * [v0.2.2](/pycqbot/var/v022/)

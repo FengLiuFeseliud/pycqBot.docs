@@ -436,3 +436,89 @@ class myCqBot(cqBot):
 这里只用在这里做自己的功能类，然后在 `bot_src/bot_fun.py` 中实列出来并在指令函数中使用
 
 同理可以多个 类似`from pycqBot.module import pixiv` 引入了一个功能类并使用
+
+### 插件编写
+
+所有插件需要放在 plugin 目录
+
+**如下创建目录与文件**
+
+创建 main.py
+
+创建 plugin 目录
+
+创建 plugin/myPlugin.py
+
+> [!attention]
+> 插件文件名需要和类一致
+> 插件类必须继承 **`pycqBot.object.Plugin`** 不然会不进行加载
+
+```python
+# plugin/myPlugin.py
+from pycqBot.cqApi import cqBot, cqHttpApi
+from pycqBot.object import Plugin, Message
+
+
+class myPlugin(Plugin):
+
+    def __init__(self, bot: cqBot, cqapi: cqHttpApi, plugin_config):
+        super().__init__(bot, cqapi, plugin_config)
+
+        bot.command(self.test_plugin, "#test", {
+            "type": "all"
+        })
+    
+    def test_plugin(self, cdata, message: Message):
+        message.reply("this 插件 myPlugin")
+```
+
+加载插件 myPlugin
+
+```python
+# main.py
+from pycqBot.cqApi import cqHttpApi, cqLog
+cqLog()
+
+cqapi = cqHttpApi()
+bot = cqapi.create_bot()
+
+bot.plugin_load(["myPlugin"])
+
+bot.start()
+```
+
+### 插件配置
+
+在目录下创建 plugin_config.yml 文件
+
+在插件名下配置插件
+
+```yaml
+# plugin_config.yml
+
+myPlugin:
+    text: "plugin_config.yml -> myPlugin"
+```
+
+在插件 `plugin_config` 中获取配置
+
+```python
+# plugin/myPlugin.py
+from pycqBot.cqApi import cqBot, cqHttpApi
+from pycqBot.object import Plugin, Message
+
+
+class myPlugin(Plugin):
+
+    def __init__(self, bot: cqBot, cqapi: cqHttpApi, plugin_config):
+        super().__init__(bot, cqapi, plugin_config)
+        # 获取 plugin_config.yml -> myPlugin -> text
+        self.text = plugin_config["text"]
+
+        bot.command(self.test_plugin, "#test", {
+            "type": "all"
+        })
+    
+    def test_plugin(self, cdata, message: Message):
+        message.reply(self.text)
+```

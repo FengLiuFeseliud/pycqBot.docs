@@ -1,150 +1,34 @@
 实现 bilibili 监听动态/直播 消息 自动解析 bilibili qq 小程序分享信息
 
-## 快速上手
+## 插件配置
 
-### 监听动态/直播 消息
-
-配置 bot 定时任务事件 `timing_jobs_start` `timing_jobs_end`
-
-并创建一条定时任务即可使用，以下实现监听碧蓝航线动态
-
-```python
-from pycqBot.cqApi import cqHttpApi, cqLog, cqBot
-# 引入模块 Bilibili
-from pycqBot.module import Bilibili
-
-# DEBUG
-cqLog()
-
-# bilibili uid 列表
-blhx = [
-    # 碧蓝航线
-    233114659,
-    # 碧蓝海事局
-    205889201,
-    # 坐看云起i
-    108344724,
-    # 臧贺Lunmta
-    36397742,
-    # 井号5467
-    4305299
-]
-
-cqapi = cqHttpApi()
-
-# 监听动态 并监听直播
-cqmb = Bilibili(cqapi, blhx, blhx)
-
-class myCqBot(cqBot):
-
-    # 在 timing_jobs_start 准备数据
-    def timing_jobs_start(self, job, run_count):
-        # 检查是否为 模块 bilibili 的定时任务
-        if job["name"] == "cqmb":
-            # 调用模块 bilibili 监听
-            cqmb.monitor()
-    
-    # 在 timing_jobs_end 清除数据
-    def timing_jobs_end(self, job, run_count):
-        # 检查是否为 模块 bilibili 的定时任务
-        if job["name"] == "cqmb":
-            # 清除在 timing_jobs_start 中准备好的数据
-            cqmb.monitor_send_clear()
-
-
-def cqmb_send_new_msg(from_id):
-    # 发送模块 bilibili 在 timing_jobs_start 中准备好的数据
-    cqmb.monitor_send(from_id)
-
-
-bot = myCqBot(cqapi, "ws://127.0.0.1:5700",
-    group_id_list=[
-        "QQ 群号"
-    ],
-)
-
-bot.timing(cqmb_send_new_msg, "cqmb", {
-    # 根据请求限制调整 直到挂机不会出现请求被拦截
-    "timeSleep": 40
-})
-
-bot.start()
-```
-
-### 解析小程序分享信息
-
-```python
-from pycqBot.cqApi import cqHttpApi, cqLog, cqBot
-# 引入模块 Bilibili
-from pycqBot.module import Bilibili
-from pycqBot import message
-
-# DEBUG
-cqLog()
-
-cqapi = cqHttpApi()
-cqmb = Bilibili(cqapi)
-
-def on_group_msg(message: Message):
-    for cq_code in cq_code_list:
-        # 如果为 cqCode json
-        if cq_code["type"] == "json":
-            # 直接传入 cqmb.get_link 判断是否为 bilibili 小程序
-            # 如果是解析小程序并发送
-            cqmb.get_link(message.group_id, cq_code)
-
-bot = cqapi.create_bot(
-    group_id_list=[
-        "QQ 群号"
-    ],
-)
-
-# 使用新的 on_group_msg
-bot.on_group_msg = on_group_msg
-
-bot.start()
-```
-## 选项
-
-> **`cqapi`** cqHttpApi 对象 必须
-> 
-> **`monitor_live`** 需监听直播间的 uid 列表
+> **`monitorLive`** 监听直播 uid 列表
 >
-> **`monitor_dynamic`** 需监听动态的 uid 列表
+> **`monitorDynamic`** 监听动态 uid 列表
+>
+> **`timeSleep`** 监听间隔 (秒)
 
-## 模块函数
+在 plugin_config.yml 配置插件, 监听碧蓝航线
 
-### get_link
+```yaml
+# plugin_config.yml
 
-发送QQ小程序分享信息
+bilibili:
+    monitorLive:
+        # 碧蓝航线
+        - 233114659
+        # 碧蓝海事局
+        - 205889201
 
-> **`group_id`** 需发送到的群 必须
-> 
-> **`cq_code`** QQ 小程序的 cqCode 字典 必须
-
-### monitor
-
-监听 (查询) b站 动态/直播 消息
-
-monitor 如果查询到更新将向模块待发送列表添加消息
-
-> monitor 没有参数
-
-### monitor_send
-
-发送监听到的信息
-
-monitor_send 会发送所有在模块待发送列表中的消息
-
-> monitor_send 没有参数
-
-### monitor_send_clear
-
-清空监听到的信息
-
-monitor_send_clear 会清空所有在模块待发送列表中的消息
-
-> monitor_send_clear 没有参数
+    monitorDynamic:
+        # 碧蓝航线
+        - 233114659
+        # 碧蓝海事局
+        - 205889201
+    
+    # 监听间隔 30s
+    timeSleep: 30
+```
 
 ## 修改消息样式
 

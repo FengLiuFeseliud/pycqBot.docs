@@ -1,4 +1,4 @@
-# pycqBot v0.3.x
+# pycqBot v0.4.x
 
 ## 选项
 
