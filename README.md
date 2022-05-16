@@ -265,6 +265,52 @@ bot.command(show, "show", {
 bot.start()
 # 成功启动后 指令 show 发送一张我的b站头像
 ```
+### 转发消息
+
+主要是可以用来发涩图，一次可以发最多200张，目前不支持私聊
+
+```python
+# 引入 node_list image
+from pycqBot.cqCode import node_list, image
+
+cqapi = cqHttpApi()
+def show(commandData, message: Message):
+    # 转发消息列表 转发三张我的头像
+    message_list = [
+        # image("图片名", "图片url")
+        image("head.jpg",
+        "https://i1.hdslb.com/bfs/face/3ad60a0f5d22e182d7a2a822710d483bc16153e2.jpg"
+        ),
+        image("head.jpg",
+        "https://i1.hdslb.com/bfs/face/3ad60a0f5d22e182d7a2a822710d483bc16153e2.jpg"
+        ),
+        image("head.jpg",
+        "https://i1.hdslb.com/bfs/face/3ad60a0f5d22e182d7a2a822710d483bc16153e2.jpg"
+        )
+    ]
+
+    cqapi.send_group_forward_msg(message.group_id, node_list(message_list, 
+        "test",
+        "QQ号"
+    ))
+
+bot = cqapi.create_bot(
+    group_id_list=[
+        "QQ 群号"
+    ],
+)
+
+bot.command(show, "show", {
+    "help": [
+        "#show - 显示我的b站头像"
+    ],
+})
+
+bot.start()
+# 成功启动后 指令 show 转发三张我的头像
+```
+
+
 ### 重写 bot cq 事件
 
 bot 事件 名字，参数完全相同于 go-cqhttp cqCode，可以直接参考 go-cqhttp cqCode文档
@@ -281,7 +327,7 @@ class myCqBot(cqBot):
         # 获取被撤回的消息
         message = self.cqapi.get_msg(message["message_id"])["data"]
         # 重新发送被撤回的消息
-        self.cqapi.send_reply(message, "有一条消息无了 群友还没看清楚呢！ %s：%s" % (
+        self.cqapi.send_group_msg(message, "有一条消息无了 群友还没看清楚呢！ %s：%s" % (
                 message["sender"]["nickname"],
                 message["message"]
             )

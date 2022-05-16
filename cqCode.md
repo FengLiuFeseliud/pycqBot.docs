@@ -66,6 +66,16 @@ bot.start()
 # 也可以用 #show 显示一张图片
 ```
 
+### node_list
+
+设置可以被 `cqapi.send_group_forward_msg` 发送的转发消息
+
+> `message_list` 发送消息列表
+>
+> `forward_name` 被转发的名称
+>
+> `forward_qq` 被转发的qq
+
 ### strToCqCodeToDict
 
 提取字符串中的所有 cqCode 字符串转换为字典列表
