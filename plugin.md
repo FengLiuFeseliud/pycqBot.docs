@@ -69,7 +69,7 @@ blhx:
 
 很简单首先在主入口文件目录创建一个名为 `plugin` 的目录，有的话就不用创建
 
-创建一个 py 文件在 `plugin` 目录下，文件名字很重要这是我们插件加载时要保持一致的，也就是插件名
+在 `plugin` 目录下创建一个目录, 在新目录下创建一个 py 文件，新目录/文件名字很重要这是我们插件加载时要保持一致的，也就是插件名， 注意新目录要于文件名一致
 
 然后在刚刚创建的文件中创建一个类，类名要与文件名一致
 
@@ -102,7 +102,7 @@ class myPlugin(Plugin):
 所以一个插件的最基本写法为如下，不这样写你的插件不会被加载
 
 ```python
-# plugin/myPlugin.py
+# plugin/myPlugin/myPlugin.py
 from pycqBot.cqApi import cqBot, cqHttpApi
 from pycqBot.object import Plugin, Message
 
@@ -115,7 +115,7 @@ class myPlugin(Plugin):
 : xxx 是为了让你的IDE有语法提示，不需要可以简化为
 
 ```python
-# plugin/myPlugin.py
+# plugin/myPlugin/myPlugin.py
 from pycqBot.object import Plugin
 
 class myPlugin(Plugin):
@@ -136,7 +136,7 @@ class myPlugin(Plugin):
 所以我们在 `__init__` 中用 `bot` `cqapi` 就可以像之前一样添加指令和使用 cqapi 了
 
 ```python
-# plugin/myPlugin.py
+# plugin/myPlugin/myPlugin.py
 from pycqBot.cqApi import cqBot, cqHttpApi
 from pycqBot.object import Plugin, Message
 
@@ -174,7 +174,7 @@ class myPlugin(Plugin):
 如，在插件中实现防撤回
 
 ```python
-# plugin/myPlugin.py
+# plugin/myPlugin/myPlugin.py
 from pycqBot.cqApi import cqBot, cqHttpApi
 from pycqBot.object import Plugin, Message
 
@@ -222,7 +222,7 @@ myPlugin:
 怎么获取这个 `text` 呢？ 很简单，在 `plugin_config.yml` 中的 text 在插件 `plugin_config` 中就是 text
 
 ```python
-# plugin/myPlugin.py
+# plugin/myPlugin/myPlugin.py
 from pycqBot.cqApi import cqBot, cqHttpApi
 from pycqBot.object import Plugin, Message
 
@@ -256,7 +256,7 @@ myPlugin:
 ```
 
 ```python
-# plugin/myPlugin.py
+# plugin/myPlugin/myPlugin.py
 from pycqBot.cqApi import cqBot, cqHttpApi
 from pycqBot.object import Plugin, Message
 

@@ -2,6 +2,20 @@
 
 如果没有需要的历史版本文档，说明版本之间差距不大 观看旧版本文档
 
+#### v0.4.3
+
+对 go-cqhttp 的自身上报消息支持增加两条消息协议
+
+自身群消息上报 message_sent_group_normal
+
+自身消息私聊上报 message_sent_private_friend
+
+添加私聊合并转发支持 cqapi.send_private_forward_msg （go-cqhttp v1.0.0-rc2）
+
+将匿名消息拆分成一条消息协议 message_group_anonymous
+
+一个插件将拥有一个同名插件目录，以多文件开发
+
 #### v0.4.0
 
 添加插件编写
