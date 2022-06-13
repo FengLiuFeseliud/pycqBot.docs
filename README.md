@@ -35,6 +35,9 @@ pypy3 ./main.py
 
 ### 初始化一个 bot
 
+**注意启动前请[下载 go-cqhttp 最新版本](https://github.com/Mrs4s/go-cqhttp/releases) 并放在当前目录**
+
+
 ```python
 from pycqBot.cqApi import cqHttpApi, cqLog
 
@@ -47,6 +50,10 @@ bot.start()
 
 # 成功启动可以使用 指令标识符+help 使用内置指令 help
 ```
+
+成功启动后
+
+![Alt](https://img.sakuratools.top/docs/pycqbot/bot1.png@0x0x0.8x80)
 
 ### 设置日志等级
 
@@ -101,6 +108,37 @@ bot.start()
 # bot 会回复消息 "Hello World"
 # 并且 help 帮助添加 echo 帮助
 ```
+
+### 链式调用
+
+bot 的指令，定时任务都可以链式设置
+
+```python
+# 链式设置多个指令
+
+# echo 函数
+def echo(commandData, message: Message):
+    # 回复消息
+    message.reply(" ".join(commandData))
+
+bot.command(echo, "echo", {
+    # echo 帮助
+    "help": [
+        "#echo - 输出文本"
+    ]
+}).command(echo, "echo2", {
+    # echo 帮助
+    "help": [
+        "#echo2 - 输出文本"
+    ]
+}).command(echo, "echo3", {
+    # echo 帮助
+    "help": [
+        "#echo3 - 输出文本"
+    ]
+}).start()
+```
+
 ### 设置指令类型
 
 上面的指令 echo 没有设置指令类型，默认只能在群里使用

@@ -103,11 +103,15 @@
     .markdown-section blockquote {
       border-color: deeppink;
     }
+
+    input[type=search] {
+      background-color: rgb(0 0 0 / 20%);
+    }
   </style>
 
 </head>
 <body>
-  <div id="app"></div>
+  <div id="app">正在加载文档哦 ~</div>
   <script>
     window.$docsify = {
       name: 'pycqBot',
@@ -115,6 +119,7 @@
       routerMode: 'history',
       repo: 'https://github.com/FengLiuFeseliud/pycqBot',
       coverpage: true,
+      onlyCover: true,
       loadSidebar: true,
       auto2top: true,
       subMaxLevel: 3,
@@ -137,12 +142,33 @@
         attention: {
           label: "注意"
         }
+      },
+
+      count:{
+          countable:true,
+          fontsize:'0.9em',
+          color:'pink',
+          language:'chinese'
+        },
+
+      // 完整配置参数
+      search: {
+        maxAge: 86400000, // 过期时间，单位毫秒，默认一天
+        paths: 'auto',
+        placeholder: '搜索文档',
+        noData: '找不到结果',
+
+        // 搜索标题的最大层级, 1 - 6
+        depth: 6,
+        hideOtherSidebarContent: false, // 是否隐藏其他侧边栏内容
       }
     }
   </script>
   <!-- Docsify v4 -->
   <script src="https://cdn.staticfile.org/docsify/4.12.2/docsify.min.js"></script>
   <script src="//unpkg.com/docsify-plugin-flexible-alerts"></script>
+  <script src="//unpkg.com/docsify-count/dist/countable.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/docsify/lib/plugins/search.min.js"></script>
   <script src="https://cdn.staticfile.org/prism/1.28.0/components/prism-bash.min.js"></script>
   <script src="https://cdn.staticfile.org/prism/1.28.0/components/prism-python.min.js"></script>
   <script src="https://cdn.staticfile.org/prism/1.28.0/components/prism-yaml.min.js"></script>

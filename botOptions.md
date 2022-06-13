@@ -201,3 +201,13 @@ bot.start()
 
 > [!tip]
 > 通过 bot 事件让定时任务更加灵活！
+
+## bot 操作
+
+### bot.start
+
+> `go_cqhttp_path` go-cqhttp 所在目录 默认当前目录
+>
+> `print_error` 是否只输出 go-cqhttp 的错误与警告日志 默认 True 输出
+>
+> `start_go_cqhttp` 是否启动 go-cqhttp 默认 True 启动
